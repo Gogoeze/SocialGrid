@@ -9,13 +9,13 @@ function Navbar() {
   const navigate = useNavigate()
 
   return (
-    <nav className="w-full bg-[#f4f4ef] shadow-sm px-10 border-b border-border py-4 flex items-center justify-between">
+    <nav className="w-full bg-[#f4f4ef] shadow-xs px-10 border-b border-border py-4 flex items-center justify-between">
       <h1 className="text-xl font-bold text-primary tracking-tight">SocialGrid</h1>
 
       <div className="flex gap-8 text-sm font-bold text-secondary">
         <button onClick={() => navigate('/')} className="hover:text-primary hover:underline transition">Dashboard</button>
         <button onClick={() => navigate('/new-post')} className="hover:text-primary hover:underline transition">New Post</button>
-        <button onClick={() => navigate('/drafts')} className="hover:text-primary hover:underline transition">Drafts</button>
+        <button onClick={() => navigate('/draft')} className="hover:text-primary hover:underline transition">Drafts</button>
         <button onClick={() => navigate('/history')} className="hover:text-primary hover:underline transition">History</button>
         <button onClick={() => navigate('/settings')} className="hover:text-primary hover:underline transition">Settings</button>
       </div>

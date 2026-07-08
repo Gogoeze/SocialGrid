@@ -1,13 +1,13 @@
 interface PlatformCardProps {
-  name: string
-  icon: string
-  lastPost: string
-  connected: boolean
-  brandColor: string
-  textColor?: string
-  onQuickPost?: () => void
-  onManage?: () => void
-  onConnect?: () => void
+  name: string;
+  icon: string;
+  lastPost: string;
+  connected: boolean;
+  brandColor: string;
+  textColor?: string;
+  onQuickPost?: () => void;
+  onManage?: () => void;
+  onConnect?: () => void;
 }
 
 export default function PlatformCard({
@@ -34,28 +34,40 @@ export default function PlatformCard({
       transition: 'box-shadow 0.2s',
     }}>
 
-      {/* Top row — icon + connected badge */}
+      {/* Top alignment row (Logo + Title on the left, Badge on the right) */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{
-          width: '48px',
-          height: '48px',
-          borderRadius: '12px',
-          backgroundColor: brandColor,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '10px',
-        }}>
-          <img
-            src={`/${icon}`}
-            alt={name}
-            style={{ width: '100%', height: '100%', filter: textColor === 'white' ? 'invert(1) brightness(2)' : 'none', objectFit: 'contain' }}
-          />
+        
+        {/* Row container to group logo and name side-by-side */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* Clean image wrapper container */}
+          <div style={{
+            width: '36px',
+            height: '36px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <img
+              src={`/${icon}`}
+              alt={name}
+              style={{ 
+                width: '100%', 
+                height: '100%', 
+                objectFit: 'contain' 
+              }}
+            />
+          </div>
+          
+          {/* App title moved directly beside the logo */}
+          <h3 style={{ color: '#3a3330', fontWeight: '700', fontSize: '16px', margin: 0 }}>
+            {name}
+          </h3>
         </div>
 
+        {/* Connection pill badge */}
         <span style={{
           fontSize: '11px',
-          fontWeight: '500',
+          fontWeight: '600',
           padding: '4px 10px',
           borderRadius: '999px',
           backgroundColor: connected ? '#f0fdf4' : '#f5f0eb',
@@ -65,13 +77,14 @@ export default function PlatformCard({
         </span>
       </div>
 
-      {/* Platform name + last post */}
-      <div>
-        <h3 style={{ color: '#3a3330', fontWeight: '600', fontSize: '16px' }}>{name}</h3>
-        <p style={{ fontSize: '12px', color: '#9a8f8a', marginTop: '4px' }}>Last post: {lastPost}</p>
+      {/* Sub-label details shifted down slightly */}
+      <div style={{ marginTop: '-4px' }}>
+        <p style={{ fontSize: '12px', color: '#9a8f8a', margin: 0 }}>
+          Last post: {lastPost}
+        </p>
       </div>
 
-      {/* Quick Post button */}
+      {/* Quick Post action button */}
       <button
         onClick={onQuickPost}
         style={{
@@ -81,7 +94,7 @@ export default function PlatformCard({
           borderRadius: '8px',
           padding: '10px',
           fontSize: '13px',
-          fontWeight: '500',
+          fontWeight: '600',
           cursor: 'pointer',
           marginTop: 'auto',
           width: '100%',
@@ -90,7 +103,7 @@ export default function PlatformCard({
         Quick Post
       </button>
 
-      {/* Manage or Connect */}
+      {/* Manage or Connect alternative button */}
       <button
         onClick={connected ? onManage : onConnect}
         style={{
@@ -100,7 +113,7 @@ export default function PlatformCard({
           borderRadius: '8px',
           padding: '8px',
           fontSize: '12px',
-          fontWeight: '500',
+          fontWeight: '600',
           cursor: 'pointer',
           width: '100%',
         }}
@@ -109,7 +122,7 @@ export default function PlatformCard({
       </button>
 
     </div>
-  )
+  );
 }
 
 

@@ -4,7 +4,7 @@ import { CalendarDays, Pencil, Sparkles } from 'lucide-react';
 import PlatformCard from '../../components/ui/platformCard';
 import BarChart from './Components/BarGraph';
 
-// color: #834f32''
+// color: #f5e8dc''
 
 const platforms = [
   { name: 'Instagram', icon: 'instagram.svg', color: '#E1306C', connected: true, lastPost: '2 days ago' },
@@ -18,7 +18,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#f5f0eb]">
+    <div className="min-h-screen bg-[var(--color-background)]">
       <main className="px-10 pb-10">
         
         {/* Header (Spans full width across the top) */}
@@ -53,15 +53,16 @@ export default function Dashboard() {
             </div>
 
             {/* Graph Container */}
-            <div className="bg-white rounded-lg shadow-md p-6 min-h-[500px]">
-              <BarChart />
-            </div>
+            {/* <div className="bg-[#f5f0eb] rounded-lg shadow-md p-6 min-h-[400px]"> */}
+              <BarChart  />
+            {/* </div> */}
 
           </div>
 
           {/* RIGHT SIDE COLUMN: Info Panel */}
-          <div className="flex-1 w-full lg:w-[350px] xl:w-[400px] bg-white rounded-lg shadow-md p-6 min-h-screen">
-            <div className='justify-between'>
+          <div>
+          <div className="flex-1 w-full lg:max-w-[450px] xl:max-w-[500px] bg-white rounded-lg shadow-md p-6 min-h-screen">
+            <div className='flex items-center justify-between'>
               <h3 className="text-xl font-semibold text-primary mb-4">Scheduled</h3>
               <CalendarDays size={20} />
             </div>
@@ -79,6 +80,13 @@ export default function Dashboard() {
             </div>
           </div>
 
+          <div className="mt-10 flex-1 w-full h-70 bg-primary rounded-lg shadow-md p-6">
+            
+           
+          </div>
+
+              </div>
+
         </div>
 
       </main>
@@ -86,59 +94,3 @@ export default function Dashboard() {
   );
  }
 
-
-// import React from 'react';
-// // Import the icons from the library
-// import { CalendarDays, Pencil, Sparkles } from 'lucide-react';
-
-// export default function ScheduledCard() {
-//   return (
-//     <div className="p-6 bg-[#f5f0eb] min-h-screen">
-      
-//       {/* Top Section Header */}
-//       <div className="flex items-center justify-between max-w-sm mb-6">
-//         <h3 className="text-xl font-bold text-[#3a3330]">Scheduled</h3>
-//         {/* Calendar Icon Wrapper */}
-//         <div className="p-2 bg-white rounded-full shadow-sm cursor-pointer text-[#834F32]">
-//           <CalendarDays size={20} />
-//         </div>
-//       </div>
-
-//       {/* Card Container */}
-//       <div className="max-w-sm p-4 bg-white border border-[#ede8e3] rounded-xl shadow-sm">
-        
-//         {/* Card Header */}
-//         <div className="flex items-center justify-between text-xs font-semibold text-[#9a8f8a]">
-//           <span>TODAY • 4:00 PM</span>
-//           <div className="flex gap-1">
-//             {/* Target platform badges go here */}
-//           </div>
-//         </div>
-
-//         {/* Content */}
-//         <div className="my-3">
-//           <h4 className="font-semibold text-[#3a3330]">Product Launch Teaser</h4>
-//           <p className="text-sm text-[#9a8f8a] mt-1 line-clamp-2">
-//             Counting down the days until we unveil what we've been building. Stay tuned...
-//           </p>
-//         </div>
-
-//         <hr className="border-[#ede8e3] my-3" />
-
-//         {/* Card Footer Actions */}
-//         <div className="flex items-center justify-between text-xs text-[#9a8f8a]">
-//           <button className="hover:text-[#3a3330] transition">
-//             <Pencil size={14} />
-//           </button>
-          
-//           <div className="flex items-center gap-1 text-[#834F32] font-medium">
-//             <Sparkles size={14} className="animate-pulse" />
-//             <span>AI Enhanced</span>
-//           </div>
-//         </div>
-
-//       </div>
-
-//     </div>
-//   );
-// }
