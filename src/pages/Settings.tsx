@@ -27,10 +27,9 @@ export default function Settings() {
   return (
     <div className="w-full min-h-screen bg-[var(--color-background)] px-6 md:px-12 py-10 font-sans antialiased text-[#222222]">
       <div className="mx-auto w-full">
-        
         {/* Main Header */}
         <header className="mb-8">
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 mb-1">Settings & Restrictions</h1>
+          <h1 className="text-4xl font-semibold text-primary mb-1">Settings & Restrictions</h1>
           <p className="text-xs text-gray-500 font-medium">
             Configure your AI engine's behavior and cross-platform automation rules.
           </p>
@@ -192,17 +191,21 @@ export default function Settings() {
           <div className="flex items-center justify-end gap-6 pt-4">
             <button 
               type="button"
-              className="text-xs font-bold text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-xs font-bold border-[var(--color-background)] shadow px-12 py-2 rounded-lg text-gray-400 hover:text-gray-600 transition-colors"
             >
               Discard Changes
             </button>
-                      {/* 1. Footing submission container finishes */}
+            <button 
+              type="button"
+              className="text-xs font-bold bg-primary shadow px-12 py-2 rounded-lg text-white hover:text-gray-600 transition-colors"
+            >
+              Save Preferences
+            </button>
           </div> 
 
-        {/* 2. Main content wrapper finishes */}
         </div>
       </div>
     </div>
   );
-} // 3. The actual JavaScript block function finishes here.
+}
 

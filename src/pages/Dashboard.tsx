@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CalendarDays, Pencil, Sparkles } from 'lucide-react';
-import PlatformCard from '../../components/ui/platformCard';
+import PlatformCard from '../components/ui/platformCard';
 import BarChart from './Components/BarGraph';
 
 // color: #f5e8dc''
@@ -93,4 +93,3 @@ export default function Dashboard() {
     </div>
   );
  }
-

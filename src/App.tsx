@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
-import Dashboard from './pages/Home/Dashboard'
+import Dashboard from './pages/Dashboard'
 import NewPost from './pages/NewPost'
 import Draft from './pages/Draft'
 import History from './pages/History'
@@ -9,7 +9,7 @@ function Navbar() {
   const navigate = useNavigate()
 
   return (
-    <nav className="w-full bg-[#f4f4ef] shadow-xs px-10 border-b border-border py-4 flex items-center justify-between">
+    <nav className="w-full bg-[#F7F7F2] shadow-xs px-10 border-b border-border py-4 flex items-center justify-between">
       <h1 className="text-xl font-bold text-primary tracking-tight">SocialGrid</h1>
 
       <div className="flex gap-8 text-sm font-bold text-secondary">

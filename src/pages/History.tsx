@@ -59,7 +59,7 @@ export default function History() {
         {/* Top Header Section */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 mb-12">
           <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Post History</h1>
+            <h1 className="text-4xl font-semibold text-primary mb-2">Post History</h1>
             <p className="text-sm leading-relaxed text-gray-400 font-medium">
               Review your social journey and analyze performance across all platforms. Every post is a milestone in your brand's growth.
             </p>

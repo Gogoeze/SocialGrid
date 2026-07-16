@@ -220,7 +220,7 @@ export default function Draft() {
         {/* Top Header Section */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 mb-12">
           <div>
-            <h1 className="text-4xl font-bold tracking-tight text-primary mb-2">Content Hub</h1>
+            <h1 className="text-4xl font-semibold text-primary mb-2">Content Hub</h1>
             <p className="text-sm leading-relaxed text-gray-400 font-medium">
               Refine your ideas or review your social journey. Every post is a grid piece in your visual story.
             </p>

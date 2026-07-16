@@ -1,14 +1,14 @@
 export default function NewPost() {
   return (
     // <div className="min-h-screen bg-[#fcfaf7] p-4 md:p-8 lg:p-10 font-sans">
-      <div className="bg-[#FAFAF5] font-sans">
+      <div className="bg-[var(--color-background)] font-sans">
 
       
       {/* HEADER SECTION */}
       {/* <div className="text-center max-w-2xl mx-auto mb-10 mt-6"> */}
-            <div className="text-center mb-10 mt-6">
+            <div className="text-center mb-10 pt-6">
 
-        <h1 className="text-3xl lg:text-4xl font-bold text-primary tracking-tight">
+        <h1 className="text-4xl font-semibold text-primary">
           Craft Your Story
         </h1>
         <p className="text-[#7c6e62] mt-2 text-sm lg:text-base font-medium">

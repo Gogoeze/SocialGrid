@@ -17,7 +17,9 @@
   --color-tertiary: #655a4c;
   --color-outline: #84746c;
   --color-error: #ba1a1a;
-  --color-background: #f5f0eb;
+  /* --color-background: #f5f0eb; */
+    --color-background: #fdfcf7;
+
   /* Spacing */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
