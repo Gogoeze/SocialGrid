@@ -1,249 +1,76 @@
-interface PlatformCardProps {
+import type { IconType } from "react-icons";
+import { FaInstagram, FaLinkedinIn, FaTiktok, FaXTwitter, FaFacebookF } from "react-icons/fa6";
+import { Plus, Settings2, Link2 } from "lucide-react";
+
+type Props = {
   name: string;
-  icon: string;
+  icon?: string; // no longer needed, kept so existing usage doesn't break
   lastPost: string;
   connected: boolean;
   brandColor: string;
-  textColor?: string;
-  onQuickPost?: () => void;
-  onManage?: () => void;
-  onConnect?: () => void;
-}
+  onQuickPost: () => void;
+  onManage: () => void;
+  onConnect: () => void;
+};
 
-export default function PlatformCard({
-  name,
-  icon,
-  lastPost,
-  connected,
-  brandColor,
-  textColor = 'white',
-  onQuickPost,
-  onManage,
-  onConnect,
-}: PlatformCardProps) {
+const ICONS: Record<string, IconType> = {
+  Instagram: FaInstagram,
+  LinkedIn: FaLinkedinIn,
+  TikTok: FaTiktok,
+  X: FaXTwitter,
+  Facebook: FaFacebookF,
+};
+
+const INSTAGRAM_GRADIENT = "linear-gradient(45deg,#f9a03f,#e1306c,#8a3ab9)";
+
+export default function PlatformCard({ name, lastPost, connected, brandColor, onQuickPost, onManage, onConnect }: Props) {
+  const Icon = ICONS[name];
+
   return (
-    <div style={{
-      backgroundColor: 'white',
-      borderRadius: '16px',
-      border: '1px solid #ede8e3',
-      padding: '24px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '16px',
-      boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-      transition: 'box-shadow 0.2s',
-    }}>
-
-      {/* Top alignment row (Logo + Title on the left, Badge on the right) */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        
-        {/* Row container to group logo and name side-by-side */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          {/* Clean image wrapper container */}
-          <div style={{
-            width: '36px',
-            height: '36px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            <img
-              src={`/${icon}`}
-              alt={name}
-              style={{ 
-                width: '100%', 
-                height: '100%', 
-                objectFit: 'contain' 
-              }}
-            />
-          </div>
-          
-          {/* App title moved directly beside the logo */}
-          <h3 style={{ color: '#3a3330', fontWeight: '700', fontSize: '16px', margin: 0 }}>
-            {name}
-          </h3>
-        </div>
-
-        {/* Connection pill badge */}
-        <span style={{
-          fontSize: '11px',
-          fontWeight: '600',
-          padding: '4px 10px',
-          borderRadius: '999px',
-          backgroundColor: connected ? '#f0fdf4' : '#f5f0eb',
-          color: connected ? '#16a34a' : '#9a8f8a',
-        }}>
-          {connected ? 'Connected' : 'Not connected'}
+    <div className="sg-card sg-row p-5 flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <span
+          className="grid h-12 w-12 place-items-center rounded-2xl text-white shadow-sm"
+          style={{ background: name === "Instagram" ? INSTAGRAM_GRADIENT : brandColor }}
+        >
+          {Icon && <Icon size={20} />}
+        </span>
+        <span
+          className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold"
+          style={connected ? { background: "var(--sg-accent-soft)", color: "var(--sg-accent-2)" } : { background: "#f1ece6", color: "var(--sg-muted)" }}
+        >
+          <span className="h-1.5 w-1.5 rounded-full" style={{ background: connected ? "#16a34a" : "#b8aa9c" }} />
+          {connected ? "Connected" : "Not connected"}
         </span>
       </div>
 
-      {/* Sub-label details shifted down slightly */}
-      <div style={{ marginTop: '-4px' }}>
-        <p style={{ fontSize: '12px', color: '#9a8f8a', margin: 0 }}>
-          Last post: {lastPost}
+      <div>
+        <h3 className="font-display text-lg font-semibold">{name}</h3>
+        <p className="text-xs" style={{ color: "var(--sg-muted)" }}>
+          {connected ? `Last post: ${lastPost}` : `Connect to post to ${name}`}
         </p>
       </div>
 
-      {/* Quick Post action button */}
-      <button
-        onClick={onQuickPost}
-        style={{
-          backgroundColor: brandColor,
-          color: textColor,
-          border: 'none',
-          borderRadius: '8px',
-          padding: '10px',
-          fontSize: '13px',
-          fontWeight: '600',
-          cursor: 'pointer',
-          marginTop: 'auto',
-          width: '100%',
-        }}
-      >
-        Quick Post
-      </button>
-
-      {/* Manage or Connect alternative button */}
-      <button
-        onClick={connected ? onManage : onConnect}
-        style={{
-          backgroundColor: 'transparent',
-          color: '#c4a882',
-          border: '1px solid #c4a882',
-          borderRadius: '8px',
-          padding: '8px',
-          fontSize: '12px',
-          fontWeight: '600',
-          cursor: 'pointer',
-          width: '100%',
-        }}
-      >
-        {connected ? 'Manage' : 'Connect'}
-      </button>
-
+      {connected ? (
+        <div className="flex items-center gap-2">
+          <button type="button" onClick={onQuickPost} className="sg-btn sg-btn-primary flex-1 py-2.5 text-xs">
+            <Plus size={14} /> Quick Post
+          </button>
+          <button
+            type="button"
+            aria-label={`Manage ${name}`}
+            onClick={onManage}
+            className="sg-icon-btn border bg-white"
+            style={{ borderColor: "var(--sg-line)" }}
+          >
+            <Settings2 size={16} />
+          </button>
+        </div>
+      ) : (
+        <button type="button" onClick={onConnect} className="sg-btn sg-btn-dark w-full py-2.5 text-xs">
+          <Link2 size={14} /> Connect
+        </button>
+      )}
     </div>
   );
 }
-
-
-
-
-
-// interface PlatformCardProps {
-//   name: string
-//   icon: string
-//   lastPost: string
-//   connected: boolean
-//   brandColor: string
-//   textColor?: string
-//   className?: string // 👈 1. ADD THIS TO THE INTERFACE
-//   onQuickPost?: () => void
-//   onManage?: () => void
-//   onConnect?: () => void
-// }
-
-// export default function PlatformCard({
-//   name,
-//   icon,
-//   lastPost,
-//   connected,
-//   brandColor,
-//   textColor = 'white',
-//   className = '', // 👈 2. DESTRUCTURE AND DEFAULT TO EMPTY STRING
-//   onQuickPost,
-//   onManage,
-//   onConnect,
-// }: PlatformCardProps) {
-//   return (
-//     <div 
-//       className={className} // 👈 3. INJECT THE TAILWIND CLASSNAME HERE
-//       style={{
-//         backgroundColor: 'white',
-//         borderRadius: '16px',
-//         border: '1px solid #ede8e3',
-//         padding: '24px',
-//         display: 'flex',
-//         flexDirection: 'column',
-//         gap: '16px',
-//         boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-//         transition: 'box-shadow 0.2s',
-//       }}
-//     >
-
-//       {/* Top row — icon + connected badge */}
-//       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-//         <div style={{
-//           width: '48px',
-//           height: '48px',
-//           borderRadius: '12px',
-//           backgroundColor: brandColor,
-//           display: 'flex',
-//           alignItems: 'center',
-//           justifyContent: 'center',
-//           padding: '10px',
-//         }}>
-//           <img
-//             src={`/${icon}`}
-//             alt={name}
-//             style={{ width: '100%', height: '100%', filter: textColor === 'white' ? 'invert(1) brightness(2)' : 'none', objectFit: 'contain' }}
-//           />
-//         </div>
-
-//         <span style={{
-//           fontSize: '11px',
-//           fontWeight: '500',
-//           padding: '4px 10px',
-//           borderRadius: '999px',
-//           backgroundColor: connected ? '#f0fdf4' : '#f5f0eb',
-//           color: connected ? '#16a34a' : '#9a8f8a',
-//         }}>
-//           {connected ? 'Connected' : 'Not connected'}
-//         </span>
-//       </div>
-
-//       {/* Platform name + last post */}
-//       <div>
-//         <h3 style={{ color: '#3a3330', fontWeight: '600', fontSize: '16px' }}>{name}</h3>
-//         <p style={{ fontSize: '12px', color: '#9a8f8a', marginTop: '4px' }}>Last post: {lastPost}</p>
-//       </div>
-
-//       {/* Quick Post button */}
-//       <button
-//         onClick={onQuickPost}
-//         style={{
-//           backgroundColor: brandColor,
-//           color: textColor,
-//           border: 'none',
-//           borderRadius: '8px',
-//           padding: '10px',
-//           fontSize: '13px',
-//           fontWeight: '500',
-//           cursor: 'pointer',
-//           marginTop: 'auto',
-//           width: '100%',
-//         }}
-//       >
-//         Quick Post
-//       </button>
-
-//       {/* Manage or Connect */}
-//       <button
-//         onClick={connected ? onManage : onConnect}
-//         style={{
-//           backgroundColor: 'transparent',
-//           color: '#c4a882',
-//           border: '1px solid #c4a882',
-//           borderRadius: '8px',
-//           padding: '8px',
-//           fontSize: '12px',
-//           fontWeight: '500',
-//           cursor: 'pointer',
-//           width: '100%',
-//         }}
-//       >
-//         {connected ? 'Manage' : 'Connect'}
-//       </button>
-
-//     </div>
-//   )
-// }

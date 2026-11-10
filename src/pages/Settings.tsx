@@ -1,211 +1,213 @@
-import { useState } from 'react';
+import { useState } from "react";
+import type { IconType } from "react-icons";
+import { FaInstagram, FaLinkedinIn, FaXTwitter } from "react-icons/fa6";
+import { RefreshCw, Target, Hash, ShieldCheck, Globe, Briefcase, Coffee, Zap, Lightbulb, Check } from "lucide-react";
+
+type AutomationKey = "linkedin" | "instagram" | "x" | "commons";
+
+type Prefs = {
+  automation: Record<AutomationKey, boolean>;
+  tone: string;
+  hashtagLimit: number;
+  guardrails: string;
+};
+
+const DEFAULTS: Prefs = {
+  automation: { linkedin: true, instagram: false, x: true, commons: false },
+  tone: "Professional",
+  hashtagLimit: 12,
+  guardrails: "",
+};
+
+const CHANNELS: { key: AutomationKey; label: string; Icon: IconType | typeof Globe; bg: string }[] = [
+  { key: "linkedin", label: "LinkedIn", Icon: FaLinkedinIn, bg: "#0a66c2" },
+  { key: "instagram", label: "Instagram", Icon: FaInstagram, bg: "linear-gradient(45deg,#f9a03f,#e1306c,#8a3ab9)" },
+  { key: "x", label: "X (Twitter)", Icon: FaXTwitter, bg: "#111111" },
+  { key: "commons", label: "Commons", Icon: Globe, bg: "#0d9488" },
+];
+
+const TONES = [
+  { name: "Professional", Icon: Briefcase },
+  { name: "Casual", Icon: Coffee },
+  { name: "Hype", Icon: Zap },
+  { name: "Witty", Icon: Lightbulb },
+];
+
+function SectionTitle({ Icon, title, right }: { Icon: typeof Globe; title: string; right?: React.ReactNode }) {
+  return (
+    <div className="flex items-center justify-between mb-1">
+      <div className="flex items-center gap-3">
+        <span className="sg-tile-icon !h-9 !w-9 !rounded-xl"><Icon size={16} /></span>
+        <h2 className="font-display text-lg font-semibold">{title}</h2>
+      </div>
+      {right}
+    </div>
+  );
+}
+
 export default function Settings() {
-  // State for toggles
-  const [automation, setAutomation] = useState({
-    linkedin: true,
-    instagram: false,
-    x: true,
-    commons: false,
-  });
+  const [saved, setSaved] = useState<Prefs>(DEFAULTS); // last saved state
+  const [prefs, setPrefs] = useState<Prefs>(DEFAULTS); // working copy
+  const [flash, setFlash] = useState(false);
 
-  // State for AI Tone Selection
-  const [selectedTone, setSelectedTone] = useState('Professional');
+  const dirty = JSON.stringify(prefs) !== JSON.stringify(saved);
+  const fill = (prefs.hashtagLimit / 30) * 100;
 
-  // State for Hashtag Slider limit
-  const [hashtagLimit, setHashtagLimit] = useState(12);
+  const toggle = (key: AutomationKey) =>
+    setPrefs((p) => ({ ...p, automation: { ...p.automation, [key]: !p.automation[key] } }));
 
-  // State for AI Guardrails Textarea
-  const [guardrails, setGuardrails] = useState('');
+  const save = () => {
+    // TODO: send `prefs` to the backend once the endpoint's schema is confirmed in Swagger
+    setSaved(prefs);
+    setFlash(true);
+    setTimeout(() => setFlash(false), 2000);
+  };
 
-  const tones = [
-    { name: 'Professional', icon: '💼' },
-    { name: 'Casual', icon: '☕' },
-    { name: 'Hype', icon: '⚡' },
-    { name: 'Witty', icon: '💡' },
-  ];
+  const muted = { color: "var(--sg-muted)" };
 
   return (
-    <div className="w-full min-h-screen bg-[var(--color-background)] px-6 md:px-12 py-10 font-sans antialiased text-[#222222]">
-      <div className="mx-auto w-full">
-        {/* Main Header */}
+    <div className="sg-page px-6 md:px-10 py-10">
+      <div className="mx-auto ">
+        {/* HEADER */}
         <header className="mb-8">
-          <h1 className="text-4xl font-semibold text-primary mb-1">Settings & Restrictions</h1>
-          <p className="text-xs text-gray-500 font-medium">
+          <h1 className="font-display text-4xl md:text-5xl font-semibold mb-2">
+            Settings & <span className="sg-gradient-text">Restrictions</span>
+          </h1>
+          <p className="text-sm lg:text-base font-medium" style={muted}>
             Configure your AI engine's behavior and cross-platform automation rules.
           </p>
         </header>
 
-        {/* Form Container */}
         <div className="space-y-6">
-          
-          {/* Section 1: Auto Post Automation */}
-          <section className="bg-white rounded-2xl p-6 border border-[#f2efe4] shadow-sm">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-sm">🔄</span>
-              <h2 className="text-sm font-bold tracking-tight text-gray-800">Auto Post Automation</h2>
-            </div>
-            <p className="text-[11px] text-gray-400 mb-6 leading-normal">
+          {/* 1. Auto post automation */}
+          <section className="sg-card p-6">
+            <SectionTitle Icon={RefreshCw} title="Auto Post Automation" />
+            <p className="text-xs mb-6" style={muted}>
               Enable instant publishing when content meets your AI confidence score threshold.
             </p>
-
-            {/* Toggles Grid */}
-            <div className="grid grid-cols-2 gap-x-12 gap-y-4">
-              {/* LinkedIn */}
-              <div className="flex items-center justify-between py-1">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-5 h-5 rounded bg-blue-600 flex items-center justify-center text-[10px] font-bold text-white">in</div>
-                  <span className="text-xs font-semibold text-gray-700">LinkedIn</span>
-                </div>
-                <button 
-                  onClick={() => setAutomation(prev => ({ ...prev, linkedin: !prev.linkedin }))}
-                  className={`w-8 h-4 rounded-full transition-colors relative flex items-center ${automation.linkedin ? 'bg-[#c4a882]' : 'bg-gray-200'}`}
-                >
-                  <span className={`w-3 h-3 bg-white rounded-full absolute shadow-sm transition-transform ${automation.linkedin ? 'transform translate-x-[17px]' : 'transform translate-x-[3px]'}`} />
-                </button>
-              </div>
-
-              {/* Instagram */}
-              <div className="flex items-center justify-between py-1">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-5 h-5 rounded bg-gradient-to-tr from-yellow-500 via-red-500 to-purple-600 flex items-center justify-center text-[10px] text-white">📸</div>
-                  <span className="text-xs font-semibold text-gray-700">Instagram</span>
-                </div>
-                <button 
-                  onClick={() => setAutomation(prev => ({ ...prev, instagram: !prev.instagram }))}
-                  className={`w-8 h-4 rounded-full transition-colors relative flex items-center ${automation.instagram ? 'bg-[#c4a882]' : 'bg-gray-200'}`}
-                >
-                  <span className={`w-3 h-3 bg-white rounded-full absolute shadow-sm transition-transform ${automation.instagram ? 'transform translate-x-[17px]' : 'transform translate-x-[3px]'}`} />
-                </button>
-              </div>
-
-              {/* X / Twitter */}
-              <div className="flex items-center justify-between py-1">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-5 h-5 rounded bg-black flex items-center justify-center text-[10px] font-bold text-white">X</div>
-                  <span className="text-xs font-semibold text-gray-700">X (Twitter)</span>
-                </div>
-                <button 
-                  onClick={() => setAutomation(prev => ({ ...prev, x: !prev.x }))}
-                  className={`w-8 h-4 rounded-full transition-colors relative flex items-center ${automation.x ? 'bg-[#c4a882]' : 'bg-gray-200'}`}
-                >
-                  <span className={`w-3 h-3 bg-white rounded-full absolute shadow-sm transition-transform ${automation.x ? 'transform translate-x-[17px]' : 'transform translate-x-[3px]'}`} />
-                </button>
-              </div>
-
-              {/* Commons */}
-              <div className="flex items-center justify-between py-1">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-5 h-5 rounded bg-teal-600 flex items-center justify-center text-[10px] text-white">🌐</div>
-                  <span className="text-xs font-semibold text-gray-700">Commons</span>
-                </div>
-                <button 
-                  onClick={() => setAutomation(prev => ({ ...prev, commons: !prev.commons }))}
-                  className={`w-8 h-4 rounded-full transition-colors relative flex items-center ${automation.commons ? 'bg-[#c4a882]' : 'bg-gray-200'}`}
-                >
-                  <span className={`w-3 h-3 bg-white rounded-full absolute shadow-sm transition-transform ${automation.commons ? 'transform translate-x-[17px]' : 'transform translate-x-[3px]'}`} />
-                </button>
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {CHANNELS.map(({ key, label, Icon, bg }) => {
+                const on = prefs.automation[key];
+                return (
+                  <div key={key} className="flex items-center justify-between rounded-2xl border bg-white px-4 py-3" style={{ borderColor: "var(--sg-line)" }}>
+                    <div className="flex items-center gap-3">
+                      <span className="grid h-9 w-9 place-items-center rounded-xl text-white" style={{ background: bg }}>
+                        <Icon size={16} />
+                      </span>
+                      <span className="text-sm font-semibold">{label}</span>
+                    </div>
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={on}
+                      aria-label={`Auto post to ${label}`}
+                      onClick={() => toggle(key)}
+                      className="sg-switch"
+                    />
+                  </div>
+                );
+              })}
             </div>
           </section>
 
-          {/* Section 2: AI Tone Preferences */}
-          <section className="bg-white rounded-2xl p-6 border border-[#f2efe4] shadow-sm">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-sm">🎯</span>
-              <h2 className="text-sm font-bold tracking-tight text-gray-800">AI Tone Preferences</h2>
-            </div>
-
-            <div className="grid grid-cols-4 gap-3">
-              {tones.map((tone) => {
-                const isActive = selectedTone === tone.name;
+          {/* 2. Tone */}
+          <section className="sg-card p-6">
+            <SectionTitle Icon={Target} title="AI Tone Preferences" />
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
+              {TONES.map(({ name, Icon }) => {
+                const active = prefs.tone === name;
                 return (
                   <button
-                    key={tone.name}
-                    onClick={() => setSelectedTone(tone.name)}
-                    className={`flex flex-col items-center justify-center py-3 px-2 rounded-xl transition-all border ${
-                      isActive 
-                        ? 'bg-[#5c4a37] text-white border-[#5c4a37]' 
-                        : 'bg-transparent text-gray-500 border-gray-100 hover:border-gray-300'
-                    }`}
+                    key={name}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => setPrefs((p) => ({ ...p, tone: name }))}
+                    className={`sg-tile ${active ? "sg-tile-active" : ""}`}
                   >
-                    <span className="text-sm mb-1">{tone.icon}</span>
-                    <span className="text-[10px] font-bold tracking-wide">{tone.name}</span>
+                    {active && <span className="sg-tile-check"><Check size={12} strokeWidth={3} /></span>}
+                    <span
+                      className="sg-tile-icon"
+                      style={active ? { background: "linear-gradient(135deg,var(--sg-accent),var(--sg-accent-2))" } : undefined}
+                    >
+                      <Icon size={20} />
+                    </span>
+                    <span className="text-xs font-semibold">{name}</span>
                   </button>
                 );
               })}
             </div>
           </section>
 
-          {/* Section 3: Hashtag Limits */}
-          <section className="bg-white rounded-2xl p-6 border border-[#f2efe4] shadow-sm">
-            <div className="flex items-center justify-between mb-1">
-              <div className="flex items-center gap-2">
-                <span className="text-sm">#</span>
-                <h2 className="text-sm font-bold tracking-tight text-gray-800">Hashtag Limits</h2>
-              </div>
-              <span className="text-xs font-bold text-gray-600">{hashtagLimit}</span>
-            </div>
-            <p className="text-[11px] text-gray-400 mb-6 leading-normal">
-              Set the maximum number of tags AI will suggest per post.
-            </p>
-
-            {/* Horizontal Input Range Slider */}
-            <div className="relative pt-1 flex flex-col">
-              <input
-                type="range"
-                min="0"
-                max="30"
-                value={hashtagLimit}
-                onChange={(e) => setHashtagLimit(Number(e.target.value))}
-                className="w-full h-1 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-[#c4a882]"
-              />
-              <div className="flex justify-between text-[9px] text-gray-400 font-bold mt-2 px-0.5">
-                <span>0</span>
-                <span>30</span>
-              </div>
-            </div>
-          </section>
-
-          {/* Section 4: AI Guardrails */}
-          <section className="bg-white rounded-2xl p-6 border border-[#f2efe4] shadow-sm">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-sm">🛡️</span>
-              <h2 className="text-sm font-bold tracking-tight text-gray-800">AI Guardrails</h2>
-            </div>
-            <p className="text-[11px] text-gray-400 mb-4 leading-normal">
-              What should the AI never do?
-            </p>
-
-            <textarea
-              value={guardrails}
-              onChange={(e) => setGuardrails(e.target.value)}
-              placeholder="Example: Never use emojis on LinkedIn, avoid mentioning competitors, don't use slang in professional posts."
-              className="w-full min-h-[90px] border border-gray-100 rounded-xl p-3 text-xs bg-[#fafaf6] placeholder-gray-400 text-gray-700 outline-none focus:border-[#c4a882] focus:bg-white transition-all resize-none leading-relaxed"
+          {/* 3. Hashtags */}
+          <section className="sg-card p-6">
+            <SectionTitle
+              Icon={Hash}
+              title="Hashtag Limits"
+              right={
+                <span className="font-display text-2xl font-semibold sg-gradient-text">{prefs.hashtagLimit}</span>
+              }
             />
-            <span className="text-[9px] text-gray-300 font-medium block mt-2">
-              Separate instructions with periods or line breaks.
-            </span>
+            <p className="text-xs mb-6" style={muted}>Set the maximum number of tags AI will suggest per post.</p>
+            <input
+              type="range"
+              min={0}
+              max={30}
+              value={prefs.hashtagLimit}
+              onChange={(e) => setPrefs((p) => ({ ...p, hashtagLimit: Number(e.target.value) }))}
+              aria-label="Hashtag limit"
+              className="sg-range"
+              style={{
+                background: `linear-gradient(to right, var(--sg-accent) 0%, var(--sg-accent-2) ${fill}%, #eadfd3 ${fill}%, #eadfd3 100%)`,
+              }}
+            />
+            <div className="flex justify-between text-[10px] font-bold mt-2 px-0.5" style={muted}>
+              <span>0</span>
+              <span>30</span>
+            </div>
           </section>
 
-          {/* Footer Save Row Container */}
-          <div className="flex items-center justify-end gap-6 pt-4">
-            <button 
+          {/* 4. Guardrails */}
+          <section className="sg-card p-6">
+            <SectionTitle Icon={ShieldCheck} title="AI Guardrails" />
+            <p className="text-xs mb-4" style={muted}>What should the AI never do?</p>
+            <textarea
+              value={prefs.guardrails}
+              maxLength={500}
+              onChange={(e) => setPrefs((p) => ({ ...p, guardrails: e.target.value }))}
+              placeholder="Example: Never use emojis on LinkedIn, avoid mentioning competitors, don't use slang in professional posts."
+              className="w-full min-h-[110px] rounded-2xl border bg-white p-4 text-sm outline-none resize-none leading-relaxed transition-all focus:border-[var(--sg-accent)] focus:shadow-[0_0_0_4px_var(--sg-accent-soft)]"
+              style={{ borderColor: "var(--sg-line)" }}
+            />
+            <div className="flex justify-between text-[11px] font-medium mt-2" style={muted}>
+              <span>Separate instructions with periods or line breaks.</span>
+              <span>{prefs.guardrails.length}/500</span>
+            </div>
+          </section>
+
+          {/* Footer actions */}
+          <div className="flex items-center justify-end gap-4 pt-2">
+            <span
+              className={`inline-flex items-center gap-1.5 text-xs font-semibold transition-opacity ${flash ? "opacity-100" : "opacity-0"}`}
+              style={{ color: "var(--sg-accent-2)" }}
+              aria-live="polite"
+            >
+              <Check size={14} strokeWidth={3} /> Preferences saved
+            </span>
+            <button
               type="button"
-              className="text-xs font-bold border-[var(--color-background)] shadow px-12 py-2 rounded-lg text-gray-400 hover:text-gray-600 transition-colors"
+              disabled={!dirty}
+              onClick={() => setPrefs(saved)}
+              className="sg-btn px-6 py-2.5 text-xs border bg-white"
+              style={{ borderColor: "var(--sg-line)", color: "var(--sg-muted)" }}
             >
               Discard Changes
             </button>
-            <button 
-              type="button"
-              className="text-xs font-bold bg-primary shadow px-12 py-2 rounded-lg text-white hover:text-gray-600 transition-colors"
-            >
+            <button type="button" disabled={!dirty} onClick={save} className="sg-btn sg-btn-primary px-7 py-2.5 text-xs">
               Save Preferences
             </button>
-          </div> 
-
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
